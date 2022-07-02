@@ -1,4 +1,8 @@
 import requests
+import json
+
+# using 300 words per minute coefficient according to: https://irisreading.com/what-is-the-average-reading-speed/
+WORDS_PER_MINUTE = 300
 
 
 class AxiosClient:
@@ -25,11 +29,22 @@ class AxiosClient:
 
         for story_id in story_ids:
             response = requests.get(f'{self.news_api_url}/content/{story_id}/').json()
-            result[story_id] = {'wordcount': response['wordcount']}
+
+            wordcount = 0
+            for block in response['blocks']['blocks']:
+                wordcount += len(block['text'].split())
+
+            words_per_minute = wordcount // WORDS_PER_MINUTE
+            result[story_id] = {
+                'permalink': response['permalink'],
+                'headline': response['headline'],
+                'word_count': wordcount,
+                'reading_time':  "<1" if words_per_minute == 0 else words_per_minute
+            }
 
         return result
 
-
+#
 # parsed = requests.get('https://api.axios.com/api/render/content/aa030df2-0a82-4066-bfba-7aa2ef316b75/').json()
 # print(print(json.dumps(parsed, indent=4, sort_keys=True)))
 # print(parsed['wordcount'])
