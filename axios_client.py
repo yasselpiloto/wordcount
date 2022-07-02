@@ -1,5 +1,4 @@
 import requests
-import json
 
 # using 300 words per minute coefficient according to: https://irisreading.com/what-is-the-average-reading-speed/
 WORDS_PER_MINUTE = 300
@@ -11,7 +10,7 @@ class AxiosClient:
         self.news_api_url = news_api_url
 
     # gets the Ids for the first n pages from the story stream
-    def get_pages(self, pages = 1):
+    def get_pages(self, pages=1):
         results = []
         next_page = f'{self.news_api_url}/stream/content/'
 
@@ -39,7 +38,7 @@ class AxiosClient:
                 'permalink': response['permalink'],
                 'headline': response['headline'],
                 'word_count': wordcount,
-                'reading_time':  "<1" if words_per_minute == 0 else words_per_minute
+                'reading_time': "<1" if words_per_minute == 0 else words_per_minute
             }
 
         return result
