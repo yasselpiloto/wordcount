@@ -43,8 +43,3 @@ class AxiosClient:
             }
 
         return result
-
-#
-# parsed = requests.get('https://api.axios.com/api/render/content/aa030df2-0a82-4066-bfba-7aa2ef316b75/').json()
-# print(print(json.dumps(parsed, indent=4, sort_keys=True)))
-# print(parsed['wordcount'])
