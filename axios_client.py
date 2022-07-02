@@ -42,3 +42,7 @@ class AxiosClient:
             }
 
         return result
+
+    def get_content_summary(self, pages=1):
+        stories = self.get_pages(pages)
+        return self.get_summary(stories)
