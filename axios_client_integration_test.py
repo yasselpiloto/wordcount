@@ -14,5 +14,5 @@ class IntegrationTestAxiosClient(unittest.TestCase):
     def test_get_stream_returns_one_page_by_default(self):
         print(json.dumps(self.client.get_content_summary(), indent=4, sort_keys=True))
 
-    def test_get_stream_returns_10_pages(self):
-        print(json.dumps(self.client.get_content_summary(10), indent=4, sort_keys=True))
+    def test_get_stream_returns_5_pages(self):
+        print(json.dumps(self.client.get_content_summary(5), indent=4, sort_keys=True))

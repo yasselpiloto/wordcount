@@ -126,41 +126,40 @@ class TestAxiosClient(unittest.TestCase):
 
     @responses.activate
     def test_get_pages_returns_an_article(self):
-        results = self.client.get_pages(1)
+        results = self.client.get_story_ids(1)
         self.assertEqual('article-1', results[0])
 
     @responses.activate
     def test_get_pages_returns_first_page_by_default(self):
-        results = self.client.get_pages()
+        results = self.client.get_story_ids()
         self.assertEqual(len(results), 10)
         self.assertEqual('article-1', results[0])
         self.assertEqual('article-10', results[9])
 
     @responses.activate
     def test_get_pages_returns_first_page(self):
-        results = self.client.get_pages(1)
+        results = self.client.get_story_ids(1)
         self.assertEqual(len(results), 10)
         self.assertEqual('article-1', results[0])
         self.assertEqual('article-10', results[9])
 
     @responses.activate
     def test_get_pages_returns_2_pages(self):
-        results = self.client.get_pages(2)
+        results = self.client.get_story_ids(2)
         self.assertEqual(15, len(results))
         self.assertEqual('article-11', results[10])
         self.assertEqual('article-15', results[14])
 
     @responses.activate
     def test_get_pages_returns_max_available_pages(self):
-        results = self.client.get_pages(5)
+        results = self.client.get_story_ids(5)
         self.assertEqual(15, len(results))
         self.assertEqual('article-11', results[10])
         self.assertEqual('article-15', results[14])
 
     @responses.activate
     def test_get_stories_length_returns_word_count(self):
-        stories = self.client.get_pages(1)
-        story_details = self.client.get_summary(stories)
+        story_details = self.client.get_content_summary()
 
         # article 1
         self.assertEqual('https://test-permalink-article-1', story_details['article-1']['permalink'])
