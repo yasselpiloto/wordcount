@@ -19,7 +19,7 @@ cd wordcount
 ### From tar.gz
 
 ```bash
-tar -xzvf wordcount.tar.gz -C wordcount
+tar -xzvf wordcount.tar.gz
 cd wordcount
 ```
 
@@ -64,7 +64,7 @@ source venv/bin/activate
 #### Install dependencies
 
 ```bash
-pip3 install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 #### Run
