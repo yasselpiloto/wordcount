@@ -19,7 +19,7 @@ class AxiosClient:
 
         return results
 
-    # returns a dictionary with the wordcount and reading time for each story
+    # returns an array of objects with the wordcount and reading time for each story
     def get_story_summary(self, story_id):
         response = requests.get(f'{self.STORY_STREAM_URL}/content/{story_id}/').json()
         wordcount = 0
@@ -36,6 +36,7 @@ class AxiosClient:
             'reading_time': "<1" if words_per_minute == 0 else words_per_minute
         }
 
+    # returns a dictionary with story Ids as keys and the summary of reading time and word count as values
     def get_content_summary(self, pages=1):
         story_ids = self.get_story_ids(pages)
         result = {}
