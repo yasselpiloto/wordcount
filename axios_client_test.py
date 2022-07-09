@@ -3,13 +3,12 @@ import responses
 
 from axios_client import AxiosClient
 
-STORY_STREAM_URL = 'https://test-url-0'
-
 
 class TestAxiosClient(unittest.TestCase):
 
     def setUp(self):
-        self.client = AxiosClient(STORY_STREAM_URL)
+        self.client = AxiosClient()
+        self.client.STORY_STREAM_URL = 'https://test-url-0'
         responses.add(responses.GET, 'https://test-url-0/stream/content/',
                       json={
                           'count': 15,
@@ -109,6 +108,88 @@ class TestAxiosClient(unittest.TestCase):
             }
         }, status=200)
 
+        responses.add(responses.GET, 'https://test-url-0/content/article-3/', json={
+            'headline': 'test headline article 3',
+            'permalink': 'https://test-permalink-article-3',
+            'wordcount': 413,
+            "blocks": {
+                "blocks": [{
+
+                    "text": "Voyager Digital filed for Chapter 11 bankruptcy protection on Tuesday, enclosing documents containing many revelations, not least of which being the way the Toronto-based crypto lender describes its own business."
+                },
+                    {
+
+                        "text": "Why it matters: That detail highlights the uniqueness of the current proceeding, one that will be watched keenly by regulators and investors as the firm embarks on a journey to untangle its books in the public eye, as a crypto shop."
+                    },
+                    {
+
+                        "text": "Call it a \"Frankenstein bankruptcy,\" Robert Honeywell, restructuring partner at K&L Gates, tells Axios."
+                    },
+                    {
+
+                        "text": "Voyager, unable tick of a description of its business from the listed choices—health care business, single-asset "
+                                "real estate, railroad operator, stockbroker, commodity broker, clearing bank—nay, checked off \"none of the "
+                                "above.\" "
+                    },
+                    {
+
+                        "text": "Peculiar, because the type of bankruptcy proceeding for which it filed doesn't match the business described. "
+                    },
+                    {
+
+                        "text": "\"And everyone else is in other classes. In a broker/dealer bankruptcy, customers get priority for their “securities accounts” and everyone else gets what’s left.\""
+                    },
+                    {
+
+                        "text": "Context: Voyager appears to be trying to stay in-line with regulator expectations. "
+                    },
+                    {
+
+                        "text": "Recall Coinbase in May had to soothe concerned customers about a potential bankruptcy after the SEC asked the company to update risk disclosures in filings to treat customers as \"unsecured creditors.\" "
+                    },
+                    {
+
+                        "text": "That's how Voyager is treating customer accounts too. "
+                    },
+                    {
+
+                        "text": "What they're saying: CEO Stephen Ehrlich tweeted following the bankruptcy filing and a statement posted to Voyager's website that customers with crypto in their accounts will be recouped in some way via the reorganization. "
+                    },
+                    {
+
+                        "text": "Yes, but: The current restructuring plan is subject to change. Voyager's filing reads:"
+                    },
+                    {
+
+                        "text": "In June, Voyager enlisted Moelis to gauge buyer appetite for their business or a cash injection and \"several parties indicated interest in participating in a potential in-court transaction.\""
+                    },
+                    {
+
+                        "text": "Indeed, the bankruptcy filings indicate Voyager is still negotiating."
+                    },
+                    {
+
+                        "text": "\"The real question is even if they filed as a Chapter 11, will customers who have yield bearing accounts with Voyager say 'I’m not just a normal unsecured creditor, I’m a securities holder,' even though, no regulator has said they are that,\" Honeywell said. "
+                    },
+                    {
+
+                        "text": "Voyager Digital declined to comment. "
+                    },
+                    {
+
+                        "text": "What's next: Assuming the proposed restructuring plan stays intact, Voyager would have to provide a fresh estimate of what their creditors are owed and put it to a vote. "
+                    },
+                    {
+
+                        "text": "\"If no one challenges and everyone votes in favor, it might just sail through,\" Honeywell said."
+                    },
+                    {
+                        "text": "What we're watching: \"Bankruptcies are highly contested battles and there is a whole industry of people who buy claims in order to fight in bankruptcy court,\" Honeywell said."
+                    }
+                ]
+            }
+        }, status=200)
+
         # define a dummy json content for the rest of the stories
         empty_blocks = {
             'permalink': 'permalink',
@@ -172,3 +253,19 @@ class TestAxiosClient(unittest.TestCase):
         self.assertEqual('https://test-permalink-article-2', story_details['article-2']['permalink'])
         self.assertEqual(125, story_details['article-2']['word_count'])
         self.assertEqual('<1', story_details['article-2']['reading_time'])
+
+    @responses.activate
+    def test_get_stories_readability_returns_score(self):
+        story_details = self.client.get_content_summary()
+
+        # article 1
+        self.assertEqual(317, story_details['article-1']['word_count'])
+        self.assertEqual(15.3, story_details['article-1']['readability'])
+
+        # article 2
+        self.assertEqual(125, story_details['article-2']['word_count'])
+        self.assertEqual(15.5, story_details['article-2']['readability'])
+
+        # article 3
+        self.assertEqual(413, story_details['article-3']['word_count'])
+        self.assertEqual(8.9, story_details['article-3']['readability'])
